@@ -1,0 +1,79 @@
+# doctor-frontend Deployment and Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edge-lis
+  namespace: iigh-edge-lis 
+  labels:
+    app: edge-lis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edge-lis
+  template:
+    metadata:
+      labels:
+        app: edge-lis
+    spec:
+      containers:
+      - name: doctor-container
+        image: registry.heal.infoviz.co/healfrontend/doctor-frontend:fb8a4cf
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: IfNotPresent
+      imagePullSecrets:
+      - name: herbor-registry-credential
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edge-lis-service
+  namespace: iigh-edge-lis
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: edge-lis
+
+# ---
+# apiVersion: autoscaling/v2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: doctor-frontend-hpa
+#   namespace: iigh-edge-lis
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: doctor-frontend
+#   minReplicas: 1
+#   maxReplicas: 3
+#   metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       target:
+#         type: Utilization
+#         averageUtilization: 80
+
+# ---
+# apiVersion: autoscaling.k8s.io/v1
+# kind: VerticalPodAutoscaler
+# metadata:
+#   name: doctor-frontend-vpa
+#   namespace: dev-frontend
+# spec:
+#   targetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: doctor-frontend
+#   updatePolicy:
+#     updateMode: "Auto"
+#   resourcePolicy:
+#     containerPolicies:
+#     - containerName: "*"
+#       controlledResources:
+#       - memory
