@@ -17,8 +17,8 @@ spec:
         app: edge-lis
     spec:
       containers:
-      - name: doctor-container
-        image: registry.heal.infoviz.co/healfrontend/doctor-frontend:fb8a4cf
+      - name: edge-lis-container
+        image: manoranjaninfoviz/edge-lis-service:a15eb82
         ports:
         - containerPort: 3000
         imagePullPolicy: IfNotPresent
@@ -33,8 +33,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 3000
-      targetPort: 3000
+    - port: 2002
+      targetPort: 2002
+    - port: 2001
+      targetPort: 2001
   selector:
     app: edge-lis
 
