@@ -20,10 +20,11 @@ spec:
       - name: edge-lis-container
         image: manoranjaninfoviz/edge-lis-service:a15eb82
         ports:
-        - containerPort: 3000
+        - containerPort: 2001
+        - containerPort: 2001
         imagePullPolicy: IfNotPresent
-      imagePullSecrets:
-      - name: herbor-registry-credential
+      # imagePullSecrets:
+      # - name: herbor-registry-credential
 ---
 apiVersion: v1
 kind: Service
